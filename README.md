@@ -1,10 +1,6 @@
 # picamframegrid
 A simple multi-webcam framegrab grid display service for Wyze RTSP or other HD-only cam streams that runs reliably on a Raspberry Pi 3b
 
-# Initial upload / extraction pending from source repo 
-https://github.com/free5ty1e/debianusbfileserver (see `camgrid*.sh` scripts if you can't wait)
-
-
 Current implementation:
 * Is a service that utilizes multiple (give it a list) ffmpeg RTSP streams from Wyze cams (1080p only, no low-res streams are available via RTSP as far as I know so this breaks all other Pi cam grid repos that I am aware of - such as `camplayer` https://github.com/raspicamplayer/camplayer and which utilizes `omxplayer` and also two custom `vlc` configs, mosaic implementation and multi-window - as soon as it tries to display two of my Wyze cams simultaneously it blanks out or flashes horribly in a seizure-inducing manner).
 * These `ffmpeg` instances write their frames to the `/ramdisk` folder, which is currently a `30MB` RAM drive set up with the following `/etc/fstab` entry:
@@ -67,6 +63,13 @@ This will only work on an `xfce` desktop right now so if you have another instal
 
 
 ## Coming Soon:
-* I will be extracting the `camgrid` functionality from my `debianusbfileserver` repo ( https://github.com/free5ty1e/debianusbfileserver ) as it has grown to the point of needing its own repo, methinks
 * Pre-built Raspberry Pi image, just edit the `/home/pi/.camgrid/camgrid.conf` file to set it up and then `camgridrestartservice.sh`
 * Better documentation, I guess
+* Testing various potential improvements such as: 
+*   gathering all frames before generating the new desktop background
+*   trying various other image formats
+*   attempting to optimize ffmpeg settings to use less memory / cpu
+*   trying various frame capture sizes and montage arrangements
+*   trying to display in a window instead of as the desktop background seamlessly / without flashing between frame updates
+*   trying to display outside the desktop environment via SDL or perhaps still Xwindow 
+*   Anything else people may suggest
