@@ -18,6 +18,24 @@ cambuffer /ramdisk tmpfs size=30M,noatime,nodev,nosuid,noexec,nodiratime 0 0
 ```
 sudo dphys-swapfile swapoff && sudo dphys-swapfile uninstall && sudo update-rc.d dphys-swapfile remove && sudo systemctl disable dphys-swapfile
 ```
+* I've installed `log2ram` ( https://github.com/azlux/log2ram ) to really minimize SD card write cycles, and adjusted the log size to `30MB` and enabled the `ram compression with the following setting in `/etc/log2ram.conf`:
+```
+SIZE=30M
+# **************** Zram backing conf  *************************************************
+
+# ZL2R Zram Log 2 Ram enables a zram drive when ZL2R=true ZL2R=false is mem only tmpfs
+ZL2R=true
+# COMP_ALG this is any compression algorithm listed in /proc/crypto
+# lz4 is fastest with lightest load but deflate (zlib) and Zstandard (zstd) give far better compression ratios
+# lzo is very close to lz4 and may with some binaries have better optimisation
+# COMP_ALG=lz4 for speed or Zstd for compression, lzo or zlib if optimisation or availabilty is a problem
+COMP_ALG=Zstd
+# LOG_DISK_SIZE is the uncompressed disk size. Note zram uses about 0.1% of the size of the disk when not in use
+# LOG_DISK_SIZE is expected compression ratio of alg chosen multiplied by log SIZE
+# lzo/lz4=2.1:1 compression ratio zlib=2.7:1 zstandard=2.9:1
+# Really a guestimate of a bit bigger than compression ratio whilst minimising 0.1% mem usage of disk size
+LOG_DISK_SIZE=40M
+```
 * `inotifywait` is utilized in another thread to watch for changes to the framegrab files, which triggers the frames to be assembled 
 * frames are being assembled via the `imagemagick` `montage` command in an a/b file pattern to `/ramdisk` and then these a/b images are being set as the `xfce` desktop background for a seamless frame update experience
 * The system auto logs into the desktop and starts the service, triggered by a custom `xsession.trigger` that I added to kick off the service once the desktop session has started - can just connect up to a monitor and watch your cameras after booting it up anywhere with network.
