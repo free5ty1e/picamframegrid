@@ -11,7 +11,7 @@ Current implementation:
 ```
 cambuffer /ramdisk tmpfs size=30M,noatime,nodev,nosuid,noexec,nodiratime 0 0
 ```
-* The frames are by default captured in `.tiff` format as it seemed to be the most reliable and fastest so far but can easily choose `.jpg` or `.bmp`.  The format you choose in the conf file (`/home/pi/.picamframegrid/picamframegrid.conf`) will be also utilized for the grid image format.
+* The frames are by default captured in `.tiff` format as it seemed to be the most reliable and fastest so far but can easily choose `.jpg` or `.bmp`.  The format you choose in the conf file (`/home/pi/.camgrid/camgrid.conf`) will be also utilized for the grid image format.
 * Capture size for each frame is by default `640x480` but you can change it in the conf file.
 * `gpu_mem=64` specifies the size of the GPU memory I am allocating in `/boot/config.txt`
 * I've disabled the swapfile entirely with the following commands:
@@ -41,7 +41,7 @@ I will post more info about my findings on how reliable / performant this is on 
 ## Installation
 To install the `picamframegrid` service, you can copypasta the following line into your SSH terminal session:
 ```
-git clone https://github.com/free5ty1e/picamframegrid.git && pushd picamframegrid && ./pcfginstall.sh && popd
+git clone https://github.com/free5ty1e/picamframegrid.git && pushd picamframegrid && ./camgridinstall.sh && popd
 ```
 
 This will only work on an `xfce` desktop right now so if you have another installed it may not work.  YMMV, and feel free to submit improvements - like other desktops support with a setting in the `conf` file, or perhaps without a desktop...
