@@ -2,7 +2,7 @@
 A simple multi-webcam framegrab grid display service for Wyze RTSP or other HD-only cam streams that runs reliably on a Raspberry Pi 3b
 
 Current implementation:
-* Is a service that utilizes 2 ffmpeg RTSP streams from Wyze cams (1080p only, no low-res streams are available via RTSP as far as I know so this breaks all other Pi cam grid repos that I am aware of - such as `camplayer` https://github.com/raspicamplayer/camplayer and which utilizes `omxplayer` and also two custom `vlc` configs, mosaic implementation and multi-window - as soon as it tries to display two of my Wyze cams simultaneously it blanks out or flashes horribly in a seizure-inducing manner).
+* Is a service that utilizes multiple (give it a list) ffmpeg RTSP streams from Wyze cams (1080p only, no low-res streams are available via RTSP as far as I know so this breaks all other Pi cam grid repos that I am aware of - such as `camplayer` https://github.com/raspicamplayer/camplayer and which utilizes `omxplayer` and also two custom `vlc` configs, mosaic implementation and multi-window - as soon as it tries to display two of my Wyze cams simultaneously it blanks out or flashes horribly in a seizure-inducing manner).
 * These `ffmpeg` instances write their frames to the `/ramdisk` folder, which is currently a `30MB` RAM drive set up with the following `/etc/fstab` entry:
 ```
 cambuffer /ramdisk tmpfs size=30M,noatime,nodev,nosuid,noexec,nodiratime 0 0
@@ -23,8 +23,10 @@ sudo dphys-swapfile swapoff && sudo dphys-swapfile uninstall && sudo update-rc.d
 ## Performance
 
 The current implementation:
+![2021-05-29-214646_1280x1024_scrot](https://user-images.githubusercontent.com/5496151/120084426-e1b6c600-c084-11eb-95e6-3c01abccca6e.png)
+* I am displaying 2 of my Wyze cams in a side-by-side grid
 * Handles 4 seconds / frame without thermal throttling on a Raspberry Pi 3b with passive cooling / stock clock
-* Thermal throttling occurs at anything faster than 3 seconds / frame in this configuration, but it still seems to work even at 1fps
+* Thermal throttling occurs at anything faster than 3 seconds / frame in this configuration, but it still seems to work even at 1fps (fastest I've tried so far)
 
 
 
