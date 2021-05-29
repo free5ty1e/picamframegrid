@@ -2,12 +2,13 @@
 A simple multi-webcam framegrab grid display service for Wyze RTSP or other HD-only cam streams that runs reliably on a Raspberry Pi 3b
 
 Current implementation:
-* Is being tested at 5 seconds / frame on a Raspberry Pi 3b
-* as a service that utilizes 2 ffmpeg RTSP streams from Wyze cams (1080p only, no low-res streams are available via RTSP as far as I know so this breaks all other Pi cam grid repos that I am aware of - such as `camplayer` https://github.com/raspicamplayer/camplayer and which utilizes `omxplayer` and also two custom `vlc` configs, mosaic implementation and multi-window - as soon as it tries to display two of my Wyze cams simultaneously it blanks out or flashes horribly in a seizure-inducing manner).
+* Is a service that utilizes 2 ffmpeg RTSP streams from Wyze cams (1080p only, no low-res streams are available via RTSP as far as I know so this breaks all other Pi cam grid repos that I am aware of - such as `camplayer` https://github.com/raspicamplayer/camplayer and which utilizes `omxplayer` and also two custom `vlc` configs, mosaic implementation and multi-window - as soon as it tries to display two of my Wyze cams simultaneously it blanks out or flashes horribly in a seizure-inducing manner).
 * These `ffmpeg` instances write their frames to the `/ramdisk` folder, which is currently a `30MB` RAM drive set up with the following `/etc/fstab` entry:
 ```
 cambuffer /ramdisk tmpfs size=30M,noatime,nodev,nosuid,noexec,nodiratime 0 0
 ```
+* The frames are by default captured in `.tiff` format as it seemed to be the most reliable and fastest so far but can easily choose `.jpg` or `.bmp`.  The format you choose in the conf file (`/home/pi/.picamframegrid/picamframegrid.conf`) will be also utilized for the grid image format.
+* Capture size for each frame is by default `640x480` but you can change it in the conf file.
 * `gpu_mem=64` specifies the size of the GPU memory I am allocating in `/boot/config.txt`
 * I've disabled the swapfile entirely with the following commands:
 ```
@@ -19,7 +20,17 @@ sudo dphys-swapfile swapoff && sudo dphys-swapfile uninstall && sudo update-rc.d
 * Can use the standard `/boot/wpa_supplicant.conf` to tell a Pi with wifi to auto connect to your network, here's an example article on how to do this: https://www.raspberrypi-spy.co.uk/2017/04/manually-setting-up-pi-wifi-using-wpa_supplicant-conf/
 
 
+## Performance
+
+The current implementation:
+* Handles 4 seconds / frame without thermal throttling on a Raspberry Pi 3b with passive cooling / stock clock
+* Thermal throttling occurs at anything faster than 3 seconds / frame in this configuration, but it still seems to work even at 1fps
+
+
+
 I will post more info about my findings on how reliable / performant this is on various Raspberry Pi's as I get a chance to test them.  I even have a Pi Zero W here that should be able to handle this task in some capacity.
+
+
 
 ## Installation
 To install the `picamframegrid` service, you can copypasta the following line into your SSH terminal session:
