@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo cp -v scripts/*.sh /usr/local/bin/
+
 camgridinstallaptpackages.sh
 
 echo "Preconfiguring your xfce4-panel to not pop up and ask for default config setup"
