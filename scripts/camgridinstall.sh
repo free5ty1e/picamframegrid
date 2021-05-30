@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo cp -v scripts/*.sh /usr/local/bin/
+camgridinstallscripts.sh
 
 camgridinstallaptpackages.sh
 
