@@ -1,6 +1,6 @@
 #!/bin/bash
 
-camgridinstallscripts.sh
+scripts/camgridinstallscripts.sh
 
 camgridinstallaptpackages.sh
 
