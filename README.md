@@ -53,7 +53,7 @@ LOG_DISK_SIZE=40M
 The current implementation:
 ![2021-05-29-214646_1280x1024_scrot](https://user-images.githubusercontent.com/5496151/120084426-e1b6c600-c084-11eb-95e6-3c01abccca6e.png)
 * I am displaying 2 of my Wyze cams in a side-by-side grid
-* Handles 4 seconds / frame without thermal throttling on a Raspberry Pi 3b with passive cooling / stock clock
+* Handles 4 seconds / frame without thermal throttling on a Raspberry Pi 3b with passive cooling / stock clock with ambient room temperature (~70*F)
 * Thermal throttling occurs at anything faster than 3 seconds / frame in this configuration, but it still seems to work even at 1fps (fastest I've tried so far)
 
 
