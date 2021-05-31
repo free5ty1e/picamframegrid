@@ -32,8 +32,7 @@ for i in "${!RTSP_STREAM_URLS[@]}"; do
 done
 
 
-ffmpeg -loglevel fatal -threads 1 -stimeout $RTSP_TIMEOUT -analyzeduration 10M -probesize 10M -re $FFMPEG_INPUT_PARAMETERS
--filter_complex "
+ffmpeg -loglevel fatal -threads 1 -stimeout $RTSP_TIMEOUT -analyzeduration 10M -probesize 10M -re $FFMPEG_INPUT_PARAMETERS -filter_complex "
 nullsrc=size=1280x1024 [base];
 $FFMPEG_FILTER_PARAMETERS_A
 $FFMPEG_FILTER_PARAMETERS_B
