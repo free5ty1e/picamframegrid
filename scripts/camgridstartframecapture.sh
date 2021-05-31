@@ -1,8 +1,6 @@
 #!/bin/bash
 . $HOME/.camgrid/camgrid.conf
 
-IOTIMEOUT=30000
-
 echo "start frame capture"
 STREAM_URL="$1"
 STREAM_TITLE="$2"
@@ -11,7 +9,7 @@ echo "parameter 2 should be STREAM_TITLE and it is $STREAM_TITLE"
 echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $CAPTURE_RESOLUTION $CAPTURE_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT..."
 
 while true; do 
-	ffmpeg -loglevel fatal -threads 1 -timeout -timeout $IOTIMEOUT -stimeout $RTSP_TIMEOUT -i "$STREAM_URL" -vf fps=fps=$CAPTURE_FPS -update 1 -an -y -s $CAPTURE_RESOLUTION "$CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT" </dev/null; 
+	ffmpeg -loglevel fatal -threads 1 -timeout -timeout $IO_TIMEOUT -stimeout $RTSP_TIMEOUT -i "$STREAM_URL" -vf fps=fps=$CAPTURE_FPS -update 1 -an -y -s $CAPTURE_RESOLUTION "$CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT" </dev/null; 
 done
 
 #Auto-restart loop:
