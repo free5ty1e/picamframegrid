@@ -12,7 +12,7 @@ if [ "$headsha" != "$upstreamsha" ]
 then
     echo "Changes detected upstream!  Updating..."
     git pull
-    scripts/camgridinstall.sh
+    scripts/camgridinstallscripts.sh
 else
     echo "No changes exist upstream, no need to perform any update operations for this repo!"
 fi
