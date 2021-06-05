@@ -11,4 +11,4 @@ StandardOutput=null
 SyslogIdentifier=camgrid
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
