@@ -52,6 +52,8 @@ LOG_DISK_SIZE=40M
 ## Performance
 
 The `direct_to_framebuffer` method (NEW): 
+![picamframegrid_directtoframebuffermode](https://user-images.githubusercontent.com/5496151/120905810-8b5c0100-c609-11eb-88d5-143ad319e06b.jpg)
+
 * I am displaying 2 of my Wyze cams in a side-by-side configuration, top-left and top-right of the screen
 * Handles up to 2fps with 2 HD Wyze cam streams like this just fine,
 *   ...however, raising to 3fps in this configuration appears to raise one of the `ffmpeg` instances up to 100% cpu and the other seems to not ever update frames, so additional work will be required to move past this limit 🤔
