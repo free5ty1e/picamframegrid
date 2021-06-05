@@ -13,11 +13,12 @@ This will only work on an `xfce` desktop right now so if you have another instal
 
 ## Current implementation
 * Is a service that utilizes multiple (give it a list) ffmpeg RTSP streams from Wyze cams (1080p only, no low-res streams are available via RTSP as far as I know so this breaks all other Pi cam grid repos that I am aware of - such as `camplayer` https://github.com/raspicamplayer/camplayer and which utilizes `omxplayer` and also two custom `vlc` configs, mosaic implementation and multi-window - as soon as it tries to display two of my Wyze cams simultaneously it blanks out or flashes horribly in a seizure-inducing manner).
-* These `ffmpeg` instances write their frames to the `/ramdisk` folder, which is currently a `30MB` RAM drive set up with the following `/etc/fstab` entry:
+* (DIRECT TO FRAMEBUFFER METHOD - NEW) These `ffmpeg` instances write their frames directly to the provided position on the screen / in the framebuffer (positions are provided in lists in the conf file along with the stream URLs in 2 additional arrays), which displays directly without an intermediate file or a need to compile multiple framegrabs into a single image.
+* (DESKTOP METHOD - OLD) These `ffmpeg` instances write their frames to the `/ramdisk` folder, which is currently a `30MB` RAM drive set up with the following `/etc/fstab` entry:
 ```
 cambuffer /ramdisk tmpfs size=30M,noatime,nodev,nosuid,noexec,nodiratime 0 0
 ```
-* The frames are by default captured in `.tiff` format as it seemed to be the most reliable and fastest so far but can easily choose `.jpg` or `.bmp`.  The format you choose in the conf file (`/home/pi/.camgrid/camgrid.conf`) will be also utilized for the grid image format.
+* (DESKTOP METHOD - OLD) The frames are by default captured in `.tiff` format as it seemed to be the most reliable and fastest so far but can easily choose `.jpg` or `.bmp`.  The format you choose in the conf file (`/home/pi/.camgrid/camgrid.conf`) will be also utilized for the grid image format.
 * Capture size for each frame is by default `640x480` but you can change it in the conf file.
 * `gpu_mem=64` specifies the size of the GPU memory I am allocating in `/boot/config.txt`
 * I've disabled the swapfile entirely with the following commands:
@@ -50,7 +51,15 @@ LOG_DISK_SIZE=40M
 
 ## Performance
 
-The current implementation:
+The `direct_to_framebuffer` method (NEW): 
+* I am displaying 2 of my Wyze cams in a side-by-side configuration, top-left and top-right of the screen
+* Handles up to 2fps with 2 HD Wyze cam streams like this just fine,
+*   ...however, raising to 3fps in this configuration appears to raise one of the `ffmpeg` instances up to 100% cpu and the other seems to not ever update frames, so additional work will be required to move past this limit 🤔
+* Each `ffmpeg` instance appears to eat up ~10-20% CPU time / ~4-5% memory at 1/5fps (5 seconds per frame) (on a Pi 3b at stock clock)
+*   ...and ~20-35% CPU time / ~5% memory at 2fps
+
+
+The `desktop_xfce` method (OLD, was before I added option to only process non-keyframes):
 ![2021-05-29-214646_1280x1024_scrot](https://user-images.githubusercontent.com/5496151/120084426-e1b6c600-c084-11eb-95e6-3c01abccca6e.png)
 * I am displaying 2 of my Wyze cams in a side-by-side grid
 * Handles 4 seconds / frame without thermal throttling on a Raspberry Pi 3b with passive cooling / stock clock with ambient room temperature (~70*F)
@@ -66,10 +75,6 @@ I will post more info about my findings on how reliable / performant this is on 
 * Pre-built Raspberry Pi image, just edit the `/home/pi/.camgrid/camgrid.conf` file to set it up and then `camgridrestartservice.sh`
 * Better documentation, I guess
 * Testing various potential improvements such as: 
-*   gathering all frames before generating the new desktop background
-*   trying various other image formats
 *   attempting to optimize ffmpeg settings to use less memory / cpu
 *   trying various frame capture sizes and montage arrangements
-*   trying to display in a window instead of as the desktop background seamlessly / without flashing between frame updates
-*   trying to display outside the desktop environment via SDL or perhaps still Xwindow 
 *   Anything else people may suggest
