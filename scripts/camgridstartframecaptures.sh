@@ -8,24 +8,27 @@ FFMPEG_FILTER_PARAMETERS_B=""
 for i in "${!RTSP_STREAM_URLS[@]}"; do 
 	STREAM_URL=${RTSP_STREAM_URLS[$i]}
 	STREAM_TITLE=${RTSP_STREAM_TITLES[$i]}
-	echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $CAPTURE_RESOLUTION $CAPTURE_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT..."
+	STREAM_XOFFSET=${RTSP_STREAM_XOFFSETS[$i]}
+	STREAM_YOFFSET=${RTSP_STREAM_YOFFSETS[$i]}
+
+	echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $CAPTURE_RESOLUTION $CAPTURE_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT or to location $STREAM_XOFFSET, $STREAM_YOFFSET..."
 	
-	XVAL=`echo "$i*480" | bc`
+# 	XVAL=`echo "$i*480" | bc`
 
-	FFMPEG_INPUT_PARAMETERS="$FFMPEG_INPUT_PARAMETERS-i $STREAM_URL "
-	FFMPEG_FILTER_PARAMETERS_A="$FFMPEG_FILTER_PARAMETERS_A
-	[$i:v] setpts=PTS-STARTPTS, scale=480x270 [video$i]"
+# 	FFMPEG_INPUT_PARAMETERS="$FFMPEG_INPUT_PARAMETERS-i $STREAM_URL "
+# 	FFMPEG_FILTER_PARAMETERS_A="$FFMPEG_FILTER_PARAMETERS_A
+# [$i:v] setpts=PTS-STARTPTS, scale=480x270 [video$i];"
 
-	if [ $i > 0 ]; then
- 		FFMPEG_FILTER_PARAMETERS_B="$FFMPEG_FILTER_PARAMETERS_B [tmp$i];
- 		[tmp$i]"
- 	else
- 		FFMPEG_FILTER_PARAMETERS_B="$FFMPEG_FILTER_PARAMETERS_B
- 		[base]"
-	fi
+# 	if [ $i > 0 ]; then
+#  		FFMPEG_FILTER_PARAMETERS_B="$FFMPEG_FILTER_PARAMETERS_B [tmp$i];
+# [tmp$i]"
+#  	else
+#  		FFMPEG_FILTER_PARAMETERS_B="$FFMPEG_FILTER_PARAMETERS_B[base]"
+# 	fi
 
-	FFMPEG_FILTER_PARAMETERS_B="$FFMPEG_FILTER_PARAMETERS_B[video1] overlay=shortest=0;x=$XVAL"
-	#camgridstartframecapture.sh "$STREAM_URL" "$STREAM_TITLE" &
+# 	FFMPEG_FILTER_PARAMETERS_B="$FFMPEG_FILTER_PARAMETERS_B[video$i] overlay=shortest=0:x=$XVAL"
+
+	camgridstartframecapture.sh "$STREAM_URL" "$STREAM_TITLE" "$STREAM_XOFFSET" "$STREAM_YOFFSET" &
 
 	# sudo ffmpeg -loglevel fatal -i "$STREAM_URL" -vf fps=fps=$CAPTURE_FPS -update 1 -an -y -s $CAPTURE_RESOLUTION "$CAPTURE_LOCATION/$STREAM_TITLE.jpg" </dev/null &
 	#-stimeout $RTSP_TIMEOUT -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2 -f fifo -fifo_format flv -drop_pkts_on_overflow 1 -attempt_recovery 1 -recover_any_error 1
@@ -35,12 +38,29 @@ for i in "${!RTSP_STREAM_URLS[@]}"; do
 done
 
 
-ffmpeg -loglevel fatal -threads 1 -stimeout $RTSP_TIMEOUT -analyzeduration 10M -probesize 10M -re $FFMPEG_INPUT_PARAMETERS -filter_complex "
-nullsrc=size=1280x1024 [base];
-$FFMPEG_FILTER_PARAMETERS_A
-$FFMPEG_FILTER_PARAMETERS_B
-" -pix_fmt bgra -f fbdev /dev/fb0
+# ffmpeg -loglevel fatal -threads 1 -stimeout $RTSP_TIMEOUT -analyzeduration 10M -probesize 10M -re $FFMPEG_INPUT_PARAMETERS -filter_complex "\"
+# nullsrc=size=1280x1024 [base];
+# $FFMPEG_FILTER_PARAMETERS_A
+# $FFMPEG_FILTER_PARAMETERS_B
+# \"" -an -pix_fmt bgra -f fbdev /dev/fb0
 
 # sudo ffmpeg -loglevel fatal -stimeout $RTSP_TIMEOUT -i "$RTSP_STREAM_URL_2" -vf fps=fps=$CAPTURE_FPS -update 1 -an -y -s $CAPTURE_RESOLUTION /ramdisk/rtspstream2.jpg </dev/null &
 # export CAPTURE_STREAM_PID_2=$!
+
+
+
+
+# ffmpeg -analyzeduration 10M -probesize 10M -re -i rtsp://sphene:mp3sheet@192.168.100.139/live -i rtsp://rupee:mp3sheet@192.168.100.142/live -update 1 -an -y -s 640x480 -filter_complex "fps=fps=1/5; nullsrc=size=1024x768 [base]; [0:v] setpts=PTS-STARTPTS, scale=640x480 [video0]; [1:v] setpts=PTS-STARTPTS, scale=640x480 [video1]; [base][video0] overlay=shortest=1:x=0 [tmp1]; [tmp1][video1] overlay=shortest=1:x=480" -pix_fmt bgra -f fbdev /dev/fb0
+
+# ffmpeg -analyzeduration 10M -probesize 10M -re -i rtsp://sphene:mp3sheet@192.168.100.139/live -i rtsp://rupee:mp3sheet@192.168.100.142/live -update 1 -an -y -filter_complex "fps=fps=1/5; nullsrc=size=1280x1024 [base]; [0:v] setpts=PTS-STARTPTS, scale=640x480 [video0]; [1:v] setpts=PTS-STARTPTS, scale=640x480 [video1]; [base][video0] overlay=shortest=1:x=0 [tmp1]; [tmp1][video1] overlay=shortest=1:x=480" /ramdisk/camgrid_c.tiff
+
+# ffmpeg -analyzeduration 10M -probesize 10M -re -i rtsp://sphene:mp3sheet@192.168.100.139/live -i rtsp://rupee:mp3sheet@192.168.100.142/live -an -y -filter_complex "fps=fps=1/5; nullsrc=size=1280x1024 [base]; [0:v] setpts=PTS-STARTPTS, scale=640x480 [video0]; [1:v] setpts=PTS-STARTPTS, scale=640x480 [video1]; [base][video0] overlay=shortest=0:x=0 [tmp1]; [tmp1][video1] overlay=shortest=0:x=640" /ramdisk/camgrid_c.tiff
+
+# ffmpeg -analyzeduration 10M -probesize 10M -re -i rtsp://sphene:mp3sheet@192.168.100.139/live -i rtsp://rupee:mp3sheet@192.168.100.142/live -an -y -filter_complex "nullsrc=size=1280x1024 [base]; [0:v] setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480 [video0]; [1:v] setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480 [video1]; [base][video0] overlay=shortest=1 [tmp1]; [tmp1][video1] overlay=shortest=1:x=640" /ramdisk/camgrid_c.tiff
+
+# ffmpeg -analyzeduration 10M -probesize 10M -re -i rtsp://sphene:mp3sheet@192.168.100.139/live -i rtsp://rupee:mp3sheet@192.168.100.142/live -an -y -filter_complex "nullsrc=size=1280x1024 [base]; [0:v] setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480 [video0]; [1:v] setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480 [video1]; [base][video0] overlay=shortest=1 [tmp1]; [tmp1][video1] overlay=shortest=1:x=640" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+
+#ffmpeg -skip_frame nokey -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+#ffmpeg -skip_frame nokey -i rtsp://rupee:mp3sheet@192.168.100.142/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480" -pix_fmt bgra -update 1 -f fbdev -xoffset 640 /dev/fb0
 
