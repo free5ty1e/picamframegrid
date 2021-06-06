@@ -70,6 +70,9 @@ The `desktop_xfce` method (OLD, was before I added option to only process non-ke
 
 I will post more info about my findings on how reliable / performant this is on various Raspberry Pi's as I get a chance to test them.  I even have a Pi Zero W here that should be able to handle this task in some capacity.
 
+## Posted on Facebook and Instagram
+https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fchristopher.paiano.5%2Fposts%2F10157674178661879
+https://www.instagram.com/p/CPwwF_SMJ89/
 
 ## Notes about the old desktop background method:
 If desired, you can install the xfce desktop with the `camgridinstallxfce.sh` script, which will prompt you to also set your desktop to auto login at the end via the `raspi-config` command.  This script will also set up the trigger needed to auto start the camgrid service once the xwindow session has started.  You don't need any of this if you just use the default `direct_to_framebuffer` method instead.
