@@ -10,9 +10,9 @@ for i in "${!RTSP_STREAM_URLS[@]}"; do
 	STREAM_TITLE=${RTSP_STREAM_TITLES[$i]}
 	STREAM_XOFFSET=${RTSP_STREAM_XOFFSETS[$i]}
 	STREAM_YOFFSET=${RTSP_STREAM_YOFFSETS[$i]}
-	STREAM_FPS=${RTSP_STREAM_FPS[$i]}
 
-	echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $CAPTURE_RESOLUTION $STREAM_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT or to location $STREAM_XOFFSET, $STREAM_YOFFSET..."
+
+	echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $CAPTURE_RESOLUTION $CAPTURE_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT or to location $STREAM_XOFFSET, $STREAM_YOFFSET..."
 	
 # 	XVAL=`echo "$i*480" | bc`
 
@@ -29,7 +29,7 @@ for i in "${!RTSP_STREAM_URLS[@]}"; do
 
 # 	FFMPEG_FILTER_PARAMETERS_B="$FFMPEG_FILTER_PARAMETERS_B[video$i] overlay=shortest=0:x=$XVAL"
 
-	camgridstartframecapture.sh "$STREAM_URL" "$STREAM_TITLE" "$STREAM_XOFFSET" "$STREAM_YOFFSET" "$STREAM_FPS" &
+	camgridstartframecapture.sh "$STREAM_URL" "$STREAM_TITLE" "$STREAM_XOFFSET" "$STREAM_YOFFSET" &
 
 	# sudo ffmpeg -loglevel fatal -i "$STREAM_URL" -vf fps=fps=$CAPTURE_FPS -update 1 -an -y -s $CAPTURE_RESOLUTION "$CAPTURE_LOCATION/$STREAM_TITLE.jpg" </dev/null &
 	#-stimeout $RTSP_TIMEOUT -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2 -f fifo -fifo_format flv -drop_pkts_on_overflow 1 -attempt_recovery 1 -recover_any_error 1
