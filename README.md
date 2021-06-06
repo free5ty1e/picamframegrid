@@ -52,14 +52,10 @@ LOG_DISK_SIZE=40M
 ## Performance
 
 The `direct_to_framebuffer` method (NEW): 
-![picamframegrid_directtoframebuffermode](https://user-images.githubusercontent.com/5496151/120905810-8b5c0100-c609-11eb-88d5-143ad319e06b.jpg)
-![Screen Shot 2021-06-05 at 5 25 07 PM](https://user-images.githubusercontent.com/5496151/120908795-14336680-c623-11eb-9683-82bcb858d2a4.png)
-(`top` screenshot taken on `v0.2.1`)
-
-
-* I am displaying 2 of my Wyze cams in a side-by-side configuration, top-left and top-right of the screen
-* Handles up to 2fps with 2 HD Wyze cam streams like this just fine,
-*   ...however, raising to 3fps in this configuration appears to raise one of the `ffmpeg` instances up to 100% cpu and the other seems to not ever update frames, so additional work will be required to move past this limit 🤔
+![snapshot (1)](https://user-images.githubusercontent.com/5496151/120910044-4ac3ae00-c630-11eb-909d-c66ae20ffb17.jpg)
+![Screen Shot 2021-06-05 at 6 56 15 PM](https://user-images.githubusercontent.com/5496151/120910024-1a7c0f80-c630-11eb-87e2-78b5a64d634c.png)
+* I am displaying 4 of my Wyze cams in a side-by-side configuration, top-left and top-right of the screen
+* Handles 1fps each for the top 2 HD Wyze cam streams, and 1/10fps (10 seconds per frame) for the bottom 2 HD Wyze cam streams (so far that is what I have tested)
 * Each `ffmpeg` instance appears to eat up ~10-20% CPU time / ~4-5% memory at 1/5fps (5 seconds per frame) (on a Pi 3b at stock clock)
 *   ...and ~20-35% CPU time / ~5% memory at 2fps
 
