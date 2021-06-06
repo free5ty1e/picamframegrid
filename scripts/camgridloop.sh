@@ -11,4 +11,6 @@ camgridstopframecaptures.sh
 camgridstartframecaptures.sh
 sleep 10
 
-camgrideventloop.sh
+if [ "$CAMGRID_METHOD" == "desktop_xfce" ]; then
+	camgrideventloop.sh
+fi
