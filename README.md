@@ -53,6 +53,9 @@ LOG_DISK_SIZE=40M
 
 The `direct_to_framebuffer` method (NEW): 
 ![picamframegrid_directtoframebuffermode](https://user-images.githubusercontent.com/5496151/120905810-8b5c0100-c609-11eb-88d5-143ad319e06b.jpg)
+![Screen Shot 2021-06-05 at 5 25 07 PM](https://user-images.githubusercontent.com/5496151/120908795-14336680-c623-11eb-9683-82bcb858d2a4.png)
+(`top` screenshot taken on `v0.2.1`)
+
 
 * I am displaying 2 of my Wyze cams in a side-by-side configuration, top-left and top-right of the screen
 * Handles up to 2fps with 2 HD Wyze cam streams like this just fine,
