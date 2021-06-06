@@ -32,26 +32,31 @@ export WHICHCAMGRID=a
 #    # sudo killall fim
 # done
 
-
-##NEW LOOP:
-inotifywait --event close_write,moved_to,create --monitor "$CAPTURE_LOCATION" |
-while read -r directory events filename; do
-	for i in "${!RTSP_STREAM_TITLES[@]}"; do 
-		STREAM_TITLE=${RTSP_STREAM_TITLES[$i]}
-		if [ "$filename" == "$STREAM_TITLE.$CAPTURE_FORMAT" ]; then
-			echo "$filename change detected, WHICHCAMGRID is currently $WHICHCAMGRID"
-			if [ "$WHICHCAMGRID" == "a" ]; then
-				echo "WHICHCAMGRID is currently set A, toggling to B..."
-				camgridgenerateframe.sh "$CAMGRIDFILEB"
-				camgridsetdesktopbackground.sh "$CAMGRIDFILEB"
-				export WHICHCAMGRID=b
-			else
-				echo "WHICHCAMGRID is currently set B, toggling to A..."
-				camgridgenerateframe.sh "$CAMGRIDFILEA"
-				camgridsetdesktopbackground.sh "$CAMGRIDFILEA"
-				screensaverdisable.sh
-				export WHICHCAMGRID=a
-			fi
-  		fi
+if [ "$CAMGRID_METHOD" == "desktop_xfce" ]; then
+	##NEW LOOP:
+	inotifywait --event close_write,moved_to,create --monitor "$CAPTURE_LOCATION" |
+	while read -r directory events filename; do
+		for i in "${!RTSP_STREAM_TITLES[@]}"; do 
+			STREAM_TITLE=${RTSP_STREAM_TITLES[$i]}
+			if [ "$filename" == "$STREAM_TITLE.$CAPTURE_FORMAT" ]; then
+				echo "$filename change detected, WHICHCAMGRID is currently $WHICHCAMGRID"
+				if [ "$WHICHCAMGRID" == "a" ]; then
+					echo "WHICHCAMGRID is currently set A, toggling to B..."
+					camgridgenerateframe.sh "$CAMGRIDFILEB"
+					camgridsetdesktopbackground.sh "$CAMGRIDFILEB"
+					export WHICHCAMGRID=b
+				else
+					echo "WHICHCAMGRID is currently set B, toggling to A..."
+					camgridgenerateframe.sh "$CAMGRIDFILEA"
+					camgridsetdesktopbackground.sh "$CAMGRIDFILEA"
+					screensaverdisable.sh
+					export WHICHCAMGRID=a
+				fi
+	  		fi
+		done
 	done
-done
+else
+	while true; do
+		sleep 30
+	done
+fi

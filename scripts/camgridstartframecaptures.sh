@@ -10,8 +10,10 @@ for i in "${!RTSP_STREAM_URLS[@]}"; do
 	STREAM_TITLE=${RTSP_STREAM_TITLES[$i]}
 	STREAM_XOFFSET=${RTSP_STREAM_XOFFSETS[$i]}
 	STREAM_YOFFSET=${RTSP_STREAM_YOFFSETS[$i]}
+	STREAM_FPS=${RTSP_STREAM_FPS[$i]}
 
-	echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $CAPTURE_RESOLUTION $CAPTURE_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT or to location $STREAM_XOFFSET, $STREAM_YOFFSET..."
+
+	echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $CAPTURE_RESOLUTION $STREAM_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT or to location $STREAM_XOFFSET, $STREAM_YOFFSET..."
 	
 # 	XVAL=`echo "$i*480" | bc`
 
@@ -28,9 +30,9 @@ for i in "${!RTSP_STREAM_URLS[@]}"; do
 
 # 	FFMPEG_FILTER_PARAMETERS_B="$FFMPEG_FILTER_PARAMETERS_B[video$i] overlay=shortest=0:x=$XVAL"
 
-	camgridstartframecapture.sh "$STREAM_URL" "$STREAM_TITLE" "$STREAM_XOFFSET" "$STREAM_YOFFSET" &
+	camgridstartframecapture.sh "$STREAM_URL" "$STREAM_TITLE" "$STREAM_XOFFSET" "$STREAM_YOFFSET" "$STREAM_FPS" &
 
-	# sudo ffmpeg -loglevel fatal -i "$STREAM_URL" -vf fps=fps=$CAPTURE_FPS -update 1 -an -y -s $CAPTURE_RESOLUTION "$CAPTURE_LOCATION/$STREAM_TITLE.jpg" </dev/null &
+	# sudo ffmpeg -loglevel fatal -i "$STREAM_URL" -vf fps=fps=$STREAM_FPS -update 1 -an -y -s $CAPTURE_RESOLUTION "$CAPTURE_LOCATION/$STREAM_TITLE.jpg" </dev/null &
 	#-stimeout $RTSP_TIMEOUT -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2 -f fifo -fifo_format flv -drop_pkts_on_overflow 1 -attempt_recovery 1 -recover_any_error 1
 	export CAPTURE_STREAM_PID=$!
 	echo "Waiting a second to stagger the streams..."
@@ -44,7 +46,7 @@ done
 # $FFMPEG_FILTER_PARAMETERS_B
 # \"" -an -pix_fmt bgra -f fbdev /dev/fb0
 
-# sudo ffmpeg -loglevel fatal -stimeout $RTSP_TIMEOUT -i "$RTSP_STREAM_URL_2" -vf fps=fps=$CAPTURE_FPS -update 1 -an -y -s $CAPTURE_RESOLUTION /ramdisk/rtspstream2.jpg </dev/null &
+# sudo ffmpeg -loglevel fatal -stimeout $RTSP_TIMEOUT -i "$RTSP_STREAM_URL_2" -vf fps=fps=$STREAM_FPS -update 1 -an -y -s $CAPTURE_RESOLUTION /ramdisk/rtspstream2.jpg </dev/null &
 # export CAPTURE_STREAM_PID_2=$!
 
 
@@ -63,4 +65,17 @@ done
 
 #ffmpeg -skip_frame nokey -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
 #ffmpeg -skip_frame nokey -i rtsp://rupee:mp3sheet@192.168.100.142/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480" -pix_fmt bgra -update 1 -f fbdev -xoffset 640 /dev/fb0
+
+#ffmpeg -loglevel fatal -lowres 2 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+#ffmpeg -lowres 2 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+#ffmpeg -lowres 2 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+#ffmpeg -lowres 0 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+#ffmpeg -lowres 0 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -strict unofficial -bug autodetect -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+
+
 
