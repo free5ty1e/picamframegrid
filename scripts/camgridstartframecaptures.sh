@@ -11,6 +11,7 @@ for i in "${!RTSP_STREAM_URLS[@]}"; do
 	STREAM_XOFFSET=${RTSP_STREAM_XOFFSETS[$i]}
 	STREAM_YOFFSET=${RTSP_STREAM_YOFFSETS[$i]}
 
+
 	echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $CAPTURE_RESOLUTION $CAPTURE_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT or to location $STREAM_XOFFSET, $STREAM_YOFFSET..."
 	
 # 	XVAL=`echo "$i*480" | bc`
@@ -63,4 +64,17 @@ done
 
 #ffmpeg -skip_frame nokey -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
 #ffmpeg -skip_frame nokey -i rtsp://rupee:mp3sheet@192.168.100.142/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480" -pix_fmt bgra -update 1 -f fbdev -xoffset 640 /dev/fb0
+
+#ffmpeg -loglevel fatal -lowres 2 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+#ffmpeg -lowres 2 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+#ffmpeg -lowres 2 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+#ffmpeg -lowres 0 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+#ffmpeg -lowres 0 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -strict unofficial -bug autodetect -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
+
+
+
 
