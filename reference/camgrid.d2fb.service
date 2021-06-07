@@ -7,6 +7,7 @@ ExecStart=/usr/local/bin/camgridloop.sh
 ExecStop=/usr/local/bin/camgridstopframecaptures.sh
 Restart=always
 RestartSec=5
+RuntimeMaxSec=43200
 StandardOutput=null
 SyslogIdentifier=camgrid
 
