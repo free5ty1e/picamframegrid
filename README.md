@@ -52,12 +52,12 @@ LOG_DISK_SIZE=40M
 ## Performance
 
 The `direct_to_framebuffer` method (NEW): 
-![snapshot](https://user-images.githubusercontent.com/5496151/120911211-21a81b00-c63a-11eb-8673-43e97763779f.jpg)
-![Screen Shot 2021-06-05 at 6 56 15 PM](https://user-images.githubusercontent.com/5496151/120910024-1a7c0f80-c630-11eb-87e2-78b5a64d634c.png)
+![My Wyze cams](https://user-images.githubusercontent.com/5496151/120970622-85a50f00-c720-11eb-802c-b8f27b188845.jpg)
+![top](https://user-images.githubusercontent.com/5496151/120970675-948bc180-c720-11eb-8a8c-f89eb79a128a.png)
+
 * I am displaying 4 of my Wyze cams in a 2x2 configuration, top-left / top-right / bottom-left / bottom-right of the screen (positions and resolution of each frame configurable in the conf file)
-* * Handles 1fps each for the top 2 HD Wyze cam streams, and 1/10fps (10 seconds per frame) for the bottom 2 HD Wyze cam streams (so far that is what I have tested)
-* Each `ffmpeg` instance appears to eat up ~10-20% CPU time / ~4-5% memory at 1/5fps (5 seconds per frame) (on a Pi 3b at stock clock)
-*   ...and ~20-35% CPU time / ~5% memory at 2fps
+* * Handles 1/2fps (2 seconds per frame) each for the top 2 HD Wyze cam streams, and 1/15fps (15 seconds per frame) for the bottom 2 HD Wyze cam streams (so far that is what I have tested successfully)
+* Each `ffmpeg` instance appears to eat up ~8-15% CPU time / ~4-5% memory in this configuration (on a Pi 3b at stock clock)
 
 
 The `desktop_xfce` method (OLD, was before I added option to only process non-keyframes):

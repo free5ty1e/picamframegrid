@@ -48,34 +48,3 @@ done
 
 # sudo ffmpeg -loglevel fatal -stimeout $RTSP_TIMEOUT -i "$RTSP_STREAM_URL_2" -vf fps=fps=$STREAM_FPS -update 1 -an -y -s $CAPTURE_RESOLUTION /ramdisk/rtspstream2.jpg </dev/null &
 # export CAPTURE_STREAM_PID_2=$!
-
-
-
-
-# ffmpeg -analyzeduration 10M -probesize 10M -re -i rtsp://sphene:mp3sheet@192.168.100.139/live -i rtsp://rupee:mp3sheet@192.168.100.142/live -update 1 -an -y -s 640x480 -filter_complex "fps=fps=1/5; nullsrc=size=1024x768 [base]; [0:v] setpts=PTS-STARTPTS, scale=640x480 [video0]; [1:v] setpts=PTS-STARTPTS, scale=640x480 [video1]; [base][video0] overlay=shortest=1:x=0 [tmp1]; [tmp1][video1] overlay=shortest=1:x=480" -pix_fmt bgra -f fbdev /dev/fb0
-
-# ffmpeg -analyzeduration 10M -probesize 10M -re -i rtsp://sphene:mp3sheet@192.168.100.139/live -i rtsp://rupee:mp3sheet@192.168.100.142/live -update 1 -an -y -filter_complex "fps=fps=1/5; nullsrc=size=1280x1024 [base]; [0:v] setpts=PTS-STARTPTS, scale=640x480 [video0]; [1:v] setpts=PTS-STARTPTS, scale=640x480 [video1]; [base][video0] overlay=shortest=1:x=0 [tmp1]; [tmp1][video1] overlay=shortest=1:x=480" /ramdisk/camgrid_c.tiff
-
-# ffmpeg -analyzeduration 10M -probesize 10M -re -i rtsp://sphene:mp3sheet@192.168.100.139/live -i rtsp://rupee:mp3sheet@192.168.100.142/live -an -y -filter_complex "fps=fps=1/5; nullsrc=size=1280x1024 [base]; [0:v] setpts=PTS-STARTPTS, scale=640x480 [video0]; [1:v] setpts=PTS-STARTPTS, scale=640x480 [video1]; [base][video0] overlay=shortest=0:x=0 [tmp1]; [tmp1][video1] overlay=shortest=0:x=640" /ramdisk/camgrid_c.tiff
-
-# ffmpeg -analyzeduration 10M -probesize 10M -re -i rtsp://sphene:mp3sheet@192.168.100.139/live -i rtsp://rupee:mp3sheet@192.168.100.142/live -an -y -filter_complex "nullsrc=size=1280x1024 [base]; [0:v] setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480 [video0]; [1:v] setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480 [video1]; [base][video0] overlay=shortest=1 [tmp1]; [tmp1][video1] overlay=shortest=1:x=640" /ramdisk/camgrid_c.tiff
-
-# ffmpeg -analyzeduration 10M -probesize 10M -re -i rtsp://sphene:mp3sheet@192.168.100.139/live -i rtsp://rupee:mp3sheet@192.168.100.142/live -an -y -filter_complex "nullsrc=size=1280x1024 [base]; [0:v] setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480 [video0]; [1:v] setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480 [video1]; [base][video0] overlay=shortest=1 [tmp1]; [tmp1][video1] overlay=shortest=1:x=640" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
-
-
-#ffmpeg -skip_frame nokey -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
-#ffmpeg -skip_frame nokey -i rtsp://rupee:mp3sheet@192.168.100.142/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=1/5, scale=640x480" -pix_fmt bgra -update 1 -f fbdev -xoffset 640 /dev/fb0
-
-#ffmpeg -loglevel fatal -lowres 2 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
-
-#ffmpeg -lowres 2 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
-
-#ffmpeg -lowres 2 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
-
-#ffmpeg -lowres 0 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
-
-#ffmpeg -lowres 0 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -strict unofficial -bug autodetect -i rtsp://sphene:mp3sheet@192.168.100.139/live -an -y -filter_complex "setpts=PTS-STARTPTS, fps=fps=2, scale=640x480" -pix_fmt bgra -update 1 -f fbdev /dev/fb0
-
-
-
-
