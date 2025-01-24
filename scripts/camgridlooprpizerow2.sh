@@ -8,7 +8,7 @@ echo "User is `id -nu`, should be pi for this to work..."
 # fi
 
 camgridstopframecaptures.sh
-camgridstartframecapturesrpizerow2.sh
+camgridstartframecapturesrpizero2w.sh
 sleep 10
 
 camgrideventloop.sh
