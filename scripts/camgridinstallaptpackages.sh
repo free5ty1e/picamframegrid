@@ -1,13 +1,15 @@
 #!/bin/bash
 
-sudo apt install -y --no-install-recommends xserver-xorg-core xserver-xorg xfonts-base xinit xfce4 desktop-base lightdm xloadimage fbi fim imagemagick ffmpeg vlc xfce4-goodies inotify-tools scrot
+# --no-install-recommends
+sudo apt install -y xserver-xorg-core xserver-xorg xfonts-base xinit xfce4 desktop-base lightdm xloadimage fbi fim imagemagick vlc xfce4-goodies inotify-tools scrot
 sudo apt install -y --no-install-recommends omxplayer
 sudo apt-get install -y libx264-dev
+sudo apt-get install -y ffmpeg
 
 echo "Installing log2ram from https://github.com/azlux/log2ram - see instructions there if this fails..."
-echo "deb http://packages.azlux.fr/debian/ buster main" | sudo tee /etc/apt/sources.list.d/azlux.list
-wget -qO - https://azlux.fr/repo.gpg.key | sudo apt-key add -
-sudo apt update
+# echo "deb http://packages.azlux.fr/debian/ buster main" | sudo tee /etc/apt/sources.list.d/azlux.list
+# wget -qO - https://azlux.fr/repo.gpg.key | sudo apt-key add -
+# sudo apt update
 sudo apt install -y log2ram
 
 echo "Installing raspi2bmp for framebuffer screenshots..."
