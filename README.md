@@ -10,7 +10,7 @@ To install the `picamframegrid` service, you can copypasta the following line in
 git clone https://github.com/free5ty1e/picamframegrid.git && pushd picamframegrid && ./scripts/camgridinstall.sh && popd
 ```
 
-This will only work on an `xfce` desktop right now so if you have another installed it may not work.  YMMV, and feel free to submit improvements - like other desktops support with a setting in the `conf` file, or perhaps without a desktop...
+This only requires a "lite" raspbian OS, no desktop / LXDE mode needed.  
 
 
 ## Current implementation
