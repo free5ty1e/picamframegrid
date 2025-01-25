@@ -20,7 +20,7 @@ while true; do
 	elif [ "$CAMGRID_METHOD" == "direct_to_framebuffer" ]; then
 		# nice -10 ffmpeg -loglevel fatal -threads 1 -stimeout $RTSP_TIMEOUT -lowres 0 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -strict unofficial -bug autodetect -i "$STREAM_URL" -an -y -filter_complex "mpdecimate, setpts=N/$STREAM_FPS/TB, fps=fps=$STREAM_FPS, scale=$CAPTURE_RESOLUTION" -pix_fmt bgra -update 1 -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET /dev/fb0 </dev/null;
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -lowres 0 -skip_loop_filter 1 -skip_frame nokey -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -strict unofficial -bug autodetect -i "$STREAM_URL" -an -y -filter_complex "mpdecimate, setpts=N/$STREAM_FPS/TB, fps=fps=$STREAM_FPS, scale=$CAPTURE_RESOLUTION" -pix_fmt rgb565le -update 1 -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -c copy /dev/fb0 </dev/null;
-		nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -flags2 fast -err_detect ignore_err -i "$STREAM_URL" -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -c copy -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
+		nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -flags2 fast -err_detect ignore_err -i "$STREAM_URL" -vf format=yuv420p -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -c copy -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
 		# -c:v libx264 -ticks_per_frame 2 -filter_complex "mpdecimate, setpts=N/$STREAM_FPS/TB, fps=fps=$STREAM_FPS, scale=$CAPTURE_RESOLUTION" -lowres 0 -skip_loop_filter 1 -skip_frame nokey -strict unofficial -bug autodetect -ec favor_inter -idct simpleauto -pix_fmt rgb565le -update 1
 	fi
 done
