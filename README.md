@@ -14,7 +14,7 @@ This will only work on an `xfce` desktop right now so if you have another instal
 
 
 ## Current implementation
-* Is a service that utilizes multiple (give it a list) ffmpeg RTSP streams from Wyze cams (1080p only, no low-res streams are available via RTSP as far as I know so this breaks all other Pi cam grid repos that I am aware of - such as `camplayer` https://github.com/raspicamplayer/camplayer and which utilizes `omxplayer` and also two custom `vlc` configs, mosaic implementation and multi-window - as soon as it tries to display two of my Wyze cams simultaneously it blanks out or flashes horribly in a seizure-inducing manner).
+* Is a service that utilizes multiple (give it a list) ffmpeg RTSP streams from Wyze cams.
 * (DIRECT TO FRAMEBUFFER METHOD - NEW) These `ffmpeg` instances write their frames directly to the provided position on the screen / in the framebuffer (positions are provided in lists in the conf file along with the stream URLs in 2 additional arrays), which displays directly without an intermediate file or a need to compile multiple framegrabs into a single image.
 * (DESKTOP METHOD - OLD) These `ffmpeg` instances write their frames to the `/ramdisk` folder, which is currently a `30MB` RAM drive set up with the following `/etc/fstab` entry:
 ```
