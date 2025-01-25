@@ -14,7 +14,7 @@ cd log2ram-master
 chmod +x install.sh && sudo ./install.sh
 cd ..
 rm -r log2ram-master
-
+sudo systemctl disable log2ram-daily.timer
 
 
 echo "Installing raspi2bmp for framebuffer screenshots..."
