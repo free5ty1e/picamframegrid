@@ -1,3 +1,3 @@
 #!/bin/bash
 
-camgrideventlooprpizero2w.sh
+camgridlooprpizero2w.sh
