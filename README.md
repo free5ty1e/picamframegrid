@@ -1,5 +1,7 @@
 # picamframegrid
-A simple multi-webcam framegrab grid display service for Wyze RTSP or other HD-only cam streams that runs reliably on a Raspberry Pi 3b
+A simple multi-webcam framegrab grid display service for Wyze RTSP with wz-mini-hacks or other RTSP cam streams that runs reliably on a Raspberry Pi Zero 2 w with 3 360p RTSP streams at roughly 10fps (all I've tested with so far).  
+
+The RTSP streams are minimally transcoded to be directly displayable via the framebuffer.  This does not record streams, only does a quick and dirty grid display on the connected HDMI display.
 
 
 ## Installation
