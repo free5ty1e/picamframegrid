@@ -1,6 +1,9 @@
 # picamframegrid
 A simple multi-webcam framegrab grid display service for Wyze RTSP with wz-mini-hacks or other RTSP cam streams that runs reliably on a Raspberry Pi Zero 2 w with 3 360p RTSP streams at roughly 10fps (all I've tested with so far).  
 
+![My Wyze cams](https://github.com/user-attachments/assets/a4f95508-3b13-4a43-9fa2-635f4885684c)
+![top](https://github.com/user-attachments/assets/d3d2baaf-0b50-457b-ad76-83acd0b40662)
+
 The RTSP streams are minimally transcoded to be directly displayable via the framebuffer.  This does not record streams, only does a quick and dirty grid display on the connected HDMI display.
 
 
@@ -45,6 +48,8 @@ COMP_ALG=Zstd
 # Really a guestimate of a bit bigger than compression ratio whilst minimising 0.1% mem usage of disk size
 LOG_DISK_SIZE=40M
 ```
+
+(OLD info for desktop mode)
 * `inotifywait` is utilized in another thread to watch for changes to the framegrab files, which triggers the frames to be assembled 
 * frames are being assembled via the `imagemagick` `montage` command in an a/b file pattern to `/ramdisk` and then these a/b images are being set as the `xfce` desktop background for a seamless frame update experience
 * The system auto logs into the desktop and starts the service, triggered by a custom `xsession.trigger` that I added to kick off the service once the desktop session has started - can just connect up to a monitor and watch your cameras after booting it up anywhere with network.
@@ -54,12 +59,11 @@ LOG_DISK_SIZE=40M
 ## Performance
 
 The `direct_to_framebuffer` method (NEW): 
-![My Wyze cams](https://user-images.githubusercontent.com/5496151/120970622-85a50f00-c720-11eb-802c-b8f27b188845.jpg)
-![top](https://user-images.githubusercontent.com/5496151/120970675-948bc180-c720-11eb-8a8c-f89eb79a128a.png)
+![My Wyze cams](https://github.com/user-attachments/assets/a4f95508-3b13-4a43-9fa2-635f4885684c)
+![top](https://github.com/user-attachments/assets/d3d2baaf-0b50-457b-ad76-83acd0b40662)
 
-* I am displaying 4 of my Wyze cams in a 2x2 configuration, top-left / top-right / bottom-left / bottom-right of the screen (positions and resolution of each frame configurable in the conf file)
-* * Handles 1/2fps (2 seconds per frame) each for the top 2 HD Wyze cam streams, and 1/15fps (15 seconds per frame) for the bottom 2 HD Wyze cam streams (so far that is what I have tested successfully)
-* Each `ffmpeg` instance appears to eat up ~8-15% CPU time / ~4-5% memory in this configuration (on a Pi 3b at stock clock)
+* I am displaying 3 of my Wyze cams in a 2x2 configuration, top-left / top-right / bottom-left / bottom-right of the screen (positions and resolution of each frame configurable in the conf file)
+* * Handles 10fps each
 
 
 The `desktop_xfce` method (OLD, was before I added option to only process non-keyframes):
