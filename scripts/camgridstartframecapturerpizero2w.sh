@@ -33,8 +33,7 @@ while true; do
 		nice -10 ffmpeg -threads 1 -rtsp_transport udp -buffer_size 256k -timeout $RTSP_TIMEOUT \
 			-fflags +genpts -flags low_delay -probesize 128k -analyzeduration 500k \
 			-use_wallclock_as_timestamps 1 -i "rtsp://sphene:mp3sheet@192.168.100.168:8554/video7_unicast" \
-			-vf "setpts=PTS-STARTPTS,format=rgb565le" -fps_mode drop -pix_fmt rgb565le -r $STREAM_FPS \
-			-vsync 2 \
+			-vf "setpts=PTS-STARTPTS,format=pix_fmts=rgb565le" -fps_mode drop -pix_fmt rgb565le -r $STREAM_FPS \
 			-c:v h264_v4l2m2m -crf 30 -an -y -f fbdev /dev/fb0
 
 
