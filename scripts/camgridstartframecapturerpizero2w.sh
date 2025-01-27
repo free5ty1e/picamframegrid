@@ -22,19 +22,13 @@ while true; do
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -lowres 0 -skip_loop_filter 1 -skip_frame nokey -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -strict unofficial -bug autodetect -i "$STREAM_URL" -an -y -filter_complex "mpdecimate, setpts=N/$STREAM_FPS/TB, fps=fps=$STREAM_FPS, scale=$CAPTURE_RESOLUTION" -pix_fmt rgb565le -update 1 -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -c copy /dev/fb0 </dev/null;
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -i "$STREAM_URL" -pix_fmt rgb565le -preset ultrafast -c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -fflags nobuffer -flags low_delay -i "$STREAM_URL" -vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
-		# nice -10 ffmpeg -threads 1 -rtsp_transport udp -buffer_size 64k -timeout 5000000 \
-		# 	-err_detect ignore_err -fflags nobuffer -flags low_delay \
-		# 	-probesize 128k -analyzeduration 500k -use_wallclock_as_timestamps 1 \
-		# 	-i "$STREAM_URL" -vf "setpts=PTS-STARTPTS" -vsync drop -pix_fmt rgb565le \
-		# 	-r $STREAM_FPS \
-		# 	-preset ultrafast -fps_mode passthrough -c:a copy -c:v h264_v4l2m2m -an -y -f fbdev \
-		# 	-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
-
-		nice -10 ffmpeg -threads 1 -rtsp_transport udp -buffer_size 256k -timeout $RTSP_TIMEOUT \
-			-fflags +genpts -flags low_delay -probesize 128k -analyzeduration 500k \
-			-use_wallclock_as_timestamps 1 -i "rtsp://sphene:mp3sheet@192.168.100.168:8554/video7_unicast" \
-			-vf "setpts=PTS-STARTPTS" -fps_mode drop -pix_fmt rgb565le -r $STREAM_FPS \
-			-c:v h264_v4l2m2m -crf 30 -an -y -f fbdev /dev/fb0
+		nice -10 ffmpeg -threads 1 -rtsp_transport udp -buffer_size 64k -timeout 5000000 \
+			-err_detect ignore_err -fflags nobuffer -flags low_delay \
+			-probesize 128k -analyzeduration 500k -use_wallclock_as_timestamps 1 \
+			-i "$STREAM_URL" -vf "setpts=PTS-STARTPTS" -vsync drop -pix_fmt rgb565le \
+			-r $STREAM_FPS \
+			-preset ultrafast -fps_mode passthrough -c:a copy -c:v h264_v4l2m2m -an -y -f fbdev \
+			-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
 
 
 		# -loglevel fatal
