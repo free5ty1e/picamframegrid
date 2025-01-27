@@ -4,6 +4,7 @@
 sudo apt install -y xserver-xorg-core xserver-xorg xfonts-base xinit xfce4 desktop-base lightdm xloadimage fbi fim imagemagick vlc xfce4-goodies inotify-tools scrot
 sudo apt install -y --no-install-recommends omxplayer
 sudo apt-get install -y libx264-dev
+sudo apt-get install -y libraspberrypi-dev raspberrypi-kernel-headers
 sudo apt-get install -y ffmpeg
 
 sudo apt-get install -y rsync
@@ -25,5 +26,19 @@ make
 sudo cp raspi2bmp /usr/local/bin/
 popd
 echo "Cleaning up - removing raspi2bmp source..."
-rm -rv raspi2bmp
+rm -rvf raspi2bmp
+
+
+echo "Installing raspi2png for framebuffer screenshots..."
+sudo apt-get install -y libz-dev
+sudo apt-get install -y apt-utils
+sudo apt-get install -y libpng-dev
+git clone https://github.com/AndrewFromMelbourne/raspi2png.git
+pushd raspi2png
+make
+sudo cp raspi2png /usr/local/bin/
+popd
+echo "Cleaning up - removing raspi2png source..."
+rm -rvf raspi2png
+
 popd
