@@ -22,12 +22,10 @@ while true; do
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -lowres 0 -skip_loop_filter 1 -skip_frame nokey -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -strict unofficial -bug autodetect -i "$STREAM_URL" -an -y -filter_complex "mpdecimate, setpts=N/$STREAM_FPS/TB, fps=fps=$STREAM_FPS, scale=$CAPTURE_RESOLUTION" -pix_fmt rgb565le -update 1 -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -c copy /dev/fb0 </dev/null;
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -i "$STREAM_URL" -pix_fmt rgb565le -preset ultrafast -c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -fflags nobuffer -flags low_delay -i "$STREAM_URL" -vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
-		nice -10 ffmpeg -threads 1 -rtsp_transport udp -timeout 5000000 \
-			-err_detect ignore_err -fflags nobuffer -flags low_delay -probesize 32 -analyzeduration 0 \
-			-use_wallclock_as_timestamps 1 -i "$STREAM_URL" -vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le \
-			-preset ultrafast -fps_mode passthrough -c:a copy -an -y -f fbdev \
-			-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
-
+		nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -rtsp_transport udp \
+			-fflags nobuffer -flags low_delay -probesize 32 -analyzeduration 0 -use_wallclock_as_timestamps 1 \
+			-i "$STREAM_URL" -vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -vsync drop \
+			-c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
 
 		# -loglevel fatal
 		# -c:v libx264 -ticks_per_frame 2 -filter_complex "mpdecimate, setpts=N/$STREAM_FPS/TB, fps=fps=$STREAM_FPS, scale=$CAPTURE_RESOLUTION" -lowres 0 -skip_loop_filter 1 -skip_frame nokey -strict unofficial -bug autodetect -ec favor_inter -idct simpleauto -pix_fmt rgb565le -update 1
