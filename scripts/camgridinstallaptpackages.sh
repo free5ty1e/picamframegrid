@@ -13,14 +13,17 @@ curl -L https://github.com/azlux/log2ram/archive/master.tar.gz | tar zxf -
 cd log2ram-master
 chmod +x install.sh && sudo ./install.sh
 cd ..
-rm -r log2ram-master
+echo "Cleaning up - removing log2ram source..."
+rm -rv log2ram-master
 sudo systemctl disable log2ram-daily.timer
 
-
 echo "Installing raspi2bmp for framebuffer screenshots..."
+sudo apt-get install -y libz-dev
 git clone https://github.com/ThinhPhan/raspi2bmp.git
 pushd raspi2bmp
 make
 sudo cp raspi2bmp /usr/local/bin/
 popd
+echo "Cleaning up - removing raspi2bmp source..."
+rm -rv raspi2bmp
 popd
