@@ -2,7 +2,7 @@
 
 # --no-install-recommends
 sudo apt install -y scrot
-sudo apt install -y xserver-xorg-core xserver-xorg xfonts-base xinit xfce4 desktop-base lightdm xloadimage fbi fim imagemagick vlc xfce4-goodies inotify-tools
+#sudo apt install -y xserver-xorg-core xserver-xorg xfonts-base xinit xfce4 desktop-base lightdm xloadimage fbi fim imagemagick vlc xfce4-goodies inotify-tools
 # sudo apt install -y --no-install-recommends omxplayer
 sudo apt-get install -y libx264-dev
 sudo apt-get install -y libraspberrypi-dev raspberrypi-kernel-headers
