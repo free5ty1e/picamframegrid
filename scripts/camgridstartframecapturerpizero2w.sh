@@ -27,7 +27,7 @@ while true; do
 			-probesize 128k -analyzeduration 500k -use_wallclock_as_timestamps 1 \
 			-i "$STREAM_URL" -vf "setpts=PTS-STARTPTS" -vsync drop -pix_fmt rgb565le \
 			-r $STREAM_FPS \
-			-preset ultrafast -fps_mode passthrough -c:a copy -c:v h264_mmal -an -y -f fbdev \
+			-preset ultrafast -fps_mode passthrough -c:a copy -c:v h264_v4l2m2m -an -y -f fbdev \
 			-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
 
 
