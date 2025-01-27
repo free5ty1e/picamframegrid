@@ -24,7 +24,7 @@ while true; do
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -fflags nobuffer -flags low_delay -i "$STREAM_URL" -vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
 		nice -10 ffmpeg -threads 1 -rtsp_transport udp -timeout 5000000 \
 			-err_detect ignore_err -fflags nobuffer -flags low_delay -probesize 32 -analyzeduration 0 \
-			-use_wallclock_as_timestamps 1 -framerate 15 \
+			-use_wallclock_as_timestamps 1 -framerate $STREAM_FPS \
 			-i "$STREAM_URL" -vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le \
 			-preset ultrafast -fps_mode passthrough -c:a copy -an -y -f fbdev \
 			-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
