@@ -7,6 +7,13 @@ STREAM_TITLE="$2"
 XOFFSET="$3"
 YOFFSET="$4"
 STREAM_FPS="$5"
+
+CAPTURE_WIDTH="${CAPTURE_RESOLUTION%x*}"
+CAPTURE_HEIGHT="${CAPTURE_RESOLUTION#*x}"
+
+echo "CAPTURE_WIDTH=\"$CAPTURE_WIDTH\""
+echo "CAPTURE_HEIGHT=\"$CAPTURE_HEIGHT\""
+
 echo "parameter 1 should be STREAM_URL and it is $STREAM_URL"
 echo "parameter 2 should be STREAM_TITLE and it is $STREAM_TITLE"
 echo "parameter 3 should be XOFFSET and it is $XOFFSET"
@@ -63,18 +70,21 @@ while true; do
 		# 	-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
 		# 	/dev/fb0 </dev/null;
 
+		
+
 		nice -10 \
-			ffmpeg \
+		ffmpeg \
 			-threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err \
 			-rtsp_transport udp -avioflags direct -fflags nobuffer+discardcorrupt+flush_packets \
-			-flags low_delay -use_wallclock_as_timestamps 1 -vsync drop -max_delay 0 -rtbufsize 64K \
-			-c:v h264_v4l2m2m \
+			-flags low_delay -use_wallclock_as_timestamps 1 -fps_mode drop -max_delay 0 -rtbufsize 64K \
+			-c:v h264_v4l2m2m -extra_hw_frames 3 \
 			-i "$STREAM_URL" \
-			-vf "setpts=PTS-STARTPTS,format=rgb565le" \
+			-vf "scale=$CAPTURE_WIDTH:$CAPTURE_HEIGHT,format=rgb565le" \
 			-pix_fmt rgb565le -an -y -f fbdev \
-			-r $STREAM_FPS -fps_mode drop \
-			-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
-			/dev/fb0 </dev/null;
+			-r $STREAM_FPS \
+			-xoffset $XOFFSET -yoffset $YOFFSET \
+			/dev/shm/fb_temp.raw && cat /dev/shm/fb_temp.raw > /dev/fb0
+
 			# -vf "scale=$WIDTH:$HEIGHT"
 
 
