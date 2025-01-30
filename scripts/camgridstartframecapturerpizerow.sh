@@ -49,7 +49,7 @@ while true; do
 			-use_wallclock_as_timestamps 1 -vsync drop -max_delay 0 -rtbufsize 64K \
 			-i "$STREAM_URL" \
 			-vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -an -y -f fbdev \
-			-r $STREAM_FPS -fps_mode drop \
+			-r $STREAM_FPS -fps_mode drop -re \
 			-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
 			/dev/fb0 </dev/null;
 
