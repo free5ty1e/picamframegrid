@@ -73,17 +73,19 @@ while true; do
 		
 
 		nice -10 \
-		ffmpeg \
+			ffmpeg \
 			-threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err \
 			-rtsp_transport udp -avioflags direct -fflags nobuffer+discardcorrupt+flush_packets \
-			-flags low_delay -use_wallclock_as_timestamps 1 -fps_mode drop -max_delay 0 -rtbufsize 64K \
+			-flags low_delay -use_wallclock_as_timestamps 1 -max_delay 0 -rtbufsize 64K \
 			-c:v h264_v4l2m2m -extra_hw_frames 3 \
 			-i "$STREAM_URL" \
-			-vf "scale=$CAPTURE_WIDTH:$CAPTURE_HEIGHT,format=rgb565le" \
+			-fps_mode drop \
+			-vf "scale=$WIDTH:$HEIGHT,format=rgb565le" \
 			-pix_fmt rgb565le -an -y -f fbdev \
 			-r $STREAM_FPS \
 			-xoffset $XOFFSET -yoffset $YOFFSET \
 			/dev/shm/fb_temp.raw && cat /dev/shm/fb_temp.raw > /dev/fb0
+
 
 			# -vf "scale=$WIDTH:$HEIGHT"
 
