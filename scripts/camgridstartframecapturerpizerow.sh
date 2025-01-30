@@ -43,15 +43,27 @@ while true; do
 		# 	-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
 		# 	/dev/fb0 </dev/null;
 
+		# nice -10 \
+		# 	ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err \
+		# 	-rtsp_transport udp -avioflags direct -fflags nobuffer+discardcorrupt+flush_packets -flags low_delay \
+		# 	-use_wallclock_as_timestamps 1 -vsync drop -max_delay 0 -rtbufsize 64K \
+		# 	-i "$STREAM_URL" \
+		# 	-vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -an -y -f fbdev \
+		# 	-r $STREAM_FPS -fps_mode drop \
+		# 	-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
+		# 	/dev/fb0 </dev/null;
+
 		nice -10 \
 			ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err \
-			-rtsp_transport udp -avioflags direct -fflags nobuffer+discardcorrupt+flush_packets -flags low_delay \
-			-use_wallclock_as_timestamps 1 -vsync drop -max_delay 0 -rtbufsize 64K \
-			-i "$STREAM_URL" \
-			-vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -an -y -f fbdev \
+			-rtsp_transport udp -avioflags direct -fflags nobuffer+discardcorrupt+flush_packets+fastseek \
+			-flags low_delay -flags2 fast -use_wallclock_as_timestamps 1 \
+			-probesize 32K -analyzeduration 0 -vsync drop -max_delay 0 -rtbufsize 64K \
+			-re -i "$STREAM_URL" \
+			-vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -an -y -f fbdev \
 			-r $STREAM_FPS -fps_mode drop \
 			-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
 			/dev/fb0 </dev/null;
+
 
 
 		# -loglevel fatal
