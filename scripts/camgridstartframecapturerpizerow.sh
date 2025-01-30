@@ -80,7 +80,7 @@ while true; do
 			-c:v h264_v4l2m2m -extra_hw_frames 3 \
 			-i "$STREAM_URL" \
 			-fps_mode drop \
-			-vf "scale=$WIDTH:$HEIGHT,format=rgb565le" \
+			-vf "scale=$CAPTURE_WIDTH:$CAPTURE_HEIGHT,format=rgb565le" \
 			-pix_fmt rgb565le -an -y -f fbdev \
 			-r $STREAM_FPS \
 			-xoffset $XOFFSET -yoffset $YOFFSET \
