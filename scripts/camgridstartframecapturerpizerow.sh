@@ -71,6 +71,13 @@ while true; do
 		# 	/dev/fb0 </dev/null;
 
 		
+		FB_TEMP_FILENAME="fb_temp.raw"
+		echo "Preparing temp framebuffer file $FB_TEMP_FILENAME..."
+		sudo mkdir -p /dev/shm
+		sudo chmod 777 /dev/shm
+		touch "/dev/shm/$FB_TEMP_FILENAME"
+		chmod 777 "/dev/shm/$FB_TEMP_FILENAME"
+		echo "Launching ffmpeg RTSP -> /dev/shm/$FB_TEMP_FILENAME -> framebuffer stream..."
 
 		nice -10 \
 			ffmpeg \
@@ -84,10 +91,7 @@ while true; do
 			-pix_fmt rgb565le -an -y -f fbdev \
 			-r $STREAM_FPS \
 			-xoffset $XOFFSET -yoffset $YOFFSET \
-			/dev/shm/fb_temp.raw && cat /dev/shm/fb_temp.raw > /dev/fb0
-
-
-			# -vf "scale=$WIDTH:$HEIGHT"
+			"/dev/shm/$FB_TEMP_FILENAME" && cat "/dev/shm/$FB_TEMP_FILENAME" > /dev/fb0
 
 
 
