@@ -53,15 +53,29 @@ while true; do
 		# 	-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
 		# 	/dev/fb0 </dev/null;
 
+		# nice -10 \
+		# 	ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err \
+		# 	-rtsp_transport udp -avioflags direct -fflags nobuffer+discardcorrupt+flush_packets \
+		# 	-flags low_delay -use_wallclock_as_timestamps 1 -vsync drop -max_delay 0 -rtbufsize 64K \
+		# 	-i "$STREAM_URL" \
+		# 	-vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -an -y -f fbdev \
+		# 	-r $STREAM_FPS -fps_mode drop \
+		# 	-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
+		# 	/dev/fb0 </dev/null;
+
 		nice -10 \
-			ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err \
+			ffmpeg \
+			-threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err \
 			-rtsp_transport udp -avioflags direct -fflags nobuffer+discardcorrupt+flush_packets \
 			-flags low_delay -use_wallclock_as_timestamps 1 -vsync drop -max_delay 0 -rtbufsize 64K \
+			-c:v h264_v4l2m2m \
 			-i "$STREAM_URL" \
-			-vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -an -y -f fbdev \
+			-vf "setpts=PTS-STARTPTS,format=rgb565le" \
+			-pix_fmt rgb565le -an -y -f fbdev \
 			-r $STREAM_FPS -fps_mode drop \
 			-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
 			/dev/fb0 </dev/null;
+			# -vf "scale=$WIDTH:$HEIGHT"
 
 
 
