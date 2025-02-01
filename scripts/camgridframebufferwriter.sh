@@ -50,7 +50,8 @@ while true; do
         SEEK_POS=$((YOFFSET * FRAMEBUFFER_WIDTH + XOFFSET))
 
         if [[ -p "$FIFO_PATH" ]]; then
-            cat "$FIFO_PATH" | pv -L 150k | dd of=/dev/fb0 bs=153600 count=1 seek=$SEEK_POS status=none iflag=nonblock
+            # Read from FIFO continuously and write to framebuffer at correct position
+            timeout 1 cat "$FIFO_PATH" | dd of=/dev/fb0 bs=153600 count=1 seek=$SEEK_POS status=none iflag=nonblock &
         fi
     done
     sleep "$FRAME_DELAY"
