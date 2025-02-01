@@ -28,7 +28,9 @@ echo "Starting framebuffer writer... Max FPS: $MAX_FPS, Frame delay: $FRAME_DELA
 #     sleep "$FRAME_DELAY"
 # done
 
-# Create FIFOs if they don’t exist
+PIXEL_SIZE=2           # RGB565 uses 2 bytes per pixel
+
+# Create FIFOs if they don't exist
 for i in "${!RTSP_STREAM_TITLES[@]}"; do
     FIFO_PATH="/dev/shm/fb_${RTSP_STREAM_TITLES[$i]}.raw"
 
@@ -48,11 +50,13 @@ while true; do
         FIFO_PATH="/dev/shm/fb_${RTSP_STREAM_TITLES[$i]}.raw"
         XOFFSET=${RTSP_STREAM_XOFFSETS[$i]}
         YOFFSET=${RTSP_STREAM_YOFFSETS[$i]}
-        SEEK_POS=$((YOFFSET * FRAMEBUFFER_WIDTH + XOFFSET))
+        
+        # Calculate the seek position in bytes
+        SEEK_POS=$(( (YOFFSET * FRAMEBUFFER_WIDTH + XOFFSET) * PIXEL_SIZE ))
 
         if [[ -p "$FIFO_PATH" ]]; then
-            # Use `cat` to continuously read from FIFO and write to framebuffer at correct position
-            cat "$FIFO_PATH" > /dev/fb0 &
+            # Read from FIFO and write to framebuffer at correct position
+            timeout 1 cat "$FIFO_PATH" | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none iflag=nonblock
         fi
     done
     sleep "$FRAME_DELAY"
