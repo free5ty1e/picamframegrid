@@ -28,7 +28,7 @@ echo "Starting framebuffer writer... Max FPS: $MAX_FPS, Frame delay: $FRAME_DELA
 #     sleep "$FRAME_DELAY"
 # done
 
-# Create FIFOs if they don't exist
+# Create FIFOs if they don’t exist
 for i in "${!RTSP_STREAM_TITLES[@]}"; do
     FIFO_PATH="/dev/shm/fb_${RTSP_STREAM_TITLES[$i]}.raw"
 
@@ -42,6 +42,7 @@ done
 
 echo "Starting framebuffer writer..."
 
+# Continuous loop to read frames and write to framebuffer
 while true; do
     for i in "${!RTSP_STREAM_TITLES[@]}"; do
         FIFO_PATH="/dev/shm/fb_${RTSP_STREAM_TITLES[$i]}.raw"
@@ -50,8 +51,8 @@ while true; do
         SEEK_POS=$((YOFFSET * FRAMEBUFFER_WIDTH + XOFFSET))
 
         if [[ -p "$FIFO_PATH" ]]; then
-            # Read from FIFO continuously and write to framebuffer at correct position
-            timeout 1 cat "$FIFO_PATH" | dd of=/dev/fb0 bs=153600 count=1 seek=$SEEK_POS status=none iflag=nonblock &
+            # Use `cat` to continuously read from FIFO and write to framebuffer at correct position
+            cat "$FIFO_PATH" > /dev/fb0 &
         fi
     done
     sleep "$FRAME_DELAY"
