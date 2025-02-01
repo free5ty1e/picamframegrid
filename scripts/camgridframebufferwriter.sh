@@ -28,9 +28,7 @@ echo "Starting framebuffer writer... Max FPS: $MAX_FPS, Frame delay: $FRAME_DELA
 #     sleep "$FRAME_DELAY"
 # done
 
-#!/bin/bash
-. $HOME/.camgrid/camgrid.conf
-
+# Create FIFOs if they don't exist
 for i in "${!RTSP_STREAM_TITLES[@]}"; do
     FIFO_PATH="/dev/shm/fb_${RTSP_STREAM_TITLES[$i]}.raw"
 
@@ -47,9 +45,13 @@ echo "Starting framebuffer writer..."
 while true; do
     for i in "${!RTSP_STREAM_TITLES[@]}"; do
         FIFO_PATH="/dev/shm/fb_${RTSP_STREAM_TITLES[$i]}.raw"
+        XOFFSET=${RTSP_STREAM_XOFFSETS[$i]}
+        YOFFSET=${RTSP_STREAM_YOFFSETS[$i]}
+        SEEK_POS=$((YOFFSET * FRAMEBUFFER_WIDTH + XOFFSET))
+
         if [[ -p "$FIFO_PATH" ]]; then
-            cat "$FIFO_PATH" | pv -L 150k > /dev/fb0 &
+            cat "$FIFO_PATH" | pv -L 150k | dd of=/dev/fb0 bs=153600 count=1 seek=$SEEK_POS status=none iflag=nonblock
         fi
     done
-    sleep "$FRAME_DELAY"  # Adjust based on FPS
+    sleep "$FRAME_DELAY"
 done
