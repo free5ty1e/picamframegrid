@@ -7,6 +7,7 @@ sudo apt install -y scrot
 sudo apt-get install -y libx264-dev
 sudo apt-get install -y libraspberrypi-dev raspberrypi-kernel-headers
 sudo apt-get install -y ffmpeg
+sudo sudo apt install -y pv
 
 sudo apt-get install -y rsync
 pushd ~
