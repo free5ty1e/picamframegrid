@@ -56,14 +56,17 @@ while true; do
         YOFFSET=${RTSP_STREAM_YOFFSETS[$i]}
 
         # Calculate framebuffer byte offset
-        SEEK_POS=$(( YOFFSET * FRAMEBUFFER_WIDTH * PIXEL_SIZE + XOFFSET * PIXEL_SIZE ))
+        # SEEK_POS=$(( YOFFSET * FRAMEBUFFER_WIDTH * PIXEL_SIZE + XOFFSET * PIXEL_SIZE ))
+        SEEK_POS=$(( Y_OFFSET * FRAMEBUFFER_WIDTH + X_OFFSET ))
+
 
         if [[ -p "$FIFO_PATH" ]]; then
             # Ensure correct frame size is read to avoid framebuffer corruption
             # timeout 1 cat "$FIFO_PATH" | head -c "$FRAME_SIZE" | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none iflag=fullblock
             #timeout 1 dd if="$FIFO_PATH" bs=$FRAME_SIZE count=1 status=none iflag=fullblock | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none
             # timeout 1 cat "$FIFO_PATH" | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none iflag=fullblock
-            cat "$FIFO_PATH" | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none iflag=fullblock
+            # cat "$FIFO_PATH" | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none iflag=fullblock
+            dd if="$FIFO_PATH" bs=$FRAME_SIZE count=1 iflag=fullblock status=none | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none
         fi
     done
 
