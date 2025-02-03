@@ -61,8 +61,8 @@ while true; do
         if [[ -p "$FIFO_PATH" ]]; then
             # Ensure correct frame size is read to avoid framebuffer corruption
             # timeout 1 cat "$FIFO_PATH" | head -c "$FRAME_SIZE" | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none iflag=fullblock
-            timeout 1 dd if="$FIFO_PATH" bs=$FRAME_SIZE count=1 status=none iflag=fullblock | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none
-
+            #timeout 1 dd if="$FIFO_PATH" bs=$FRAME_SIZE count=1 status=none iflag=fullblock | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none
+            timeout 1 cat "$FIFO_PATH" | dd of=/dev/fb0 bs=1 seek=$SEEK_POS conv=notrunc status=none iflag=fullblock
         fi
     done
 
