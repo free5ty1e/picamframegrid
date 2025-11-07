@@ -25,15 +25,38 @@ while true; do
 		#Below leaves the stream in the original resolution for a 2x2 grid.
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -fflags nobuffer -flags low_delay -rtsp_transport tcp -i "$STREAM_URL" -vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
 
-		#Below is for larger grids
+		#Below is for larger grids:
+		RES="${CAPTURE_RESOLUTIONS[$i]}"          # grab per-camera resolution
+		case "$RES" in
+			640x480)  SCALE="640:480" ;;
+			426x320)  SCALE="426:320" ;;
+			320x240)  SCALE="320:240" ;;
+			320x200)  SCALE="320:200" ;;
+			213x140)  SCALE="213:140" ;;
+			212x160)  SCALE="212:160" ;;
+			160x120)  SCALE="160:120" ;;
+			150x112)  SCALE="150:112" ;;
+			107x80)   SCALE="107:80" ;;
+			*)        SCALE="160:120" ;;
+		esac
 		nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT \
-  			-err_detect ignore_err -fflags nobuffer -flags low_delay \
-  			-rtsp_transport tcp -i "$STREAM_URL" \
-  			-vf "setpts=PTS-STARTPTS,scale=${CAPTURE_RESOLUTION//x/:},format=rgb565le" \
-  			-pix_fmt rgb565le -preset ultrafast -tune zerolatency \
-  			-an -y -f fbdev \
-  			-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
-  			/dev/fb0 </dev/null;
+			-err_detect ignore_err -fflags nobuffer -flags low_delay \
+			-rtsp_transport tcp -i "$STREAM_URL" \
+			-vf "setpts=PTS-STARTPTS,scale=$SCALE,format=rgb565le" \
+			-pix_fmt rgb565le -preset ultrafast -tune zerolatency \
+			-an -y -f fbdev \
+			-xoffset "${RTSP_STREAM_XOFFSETS[$i]}" -yoffset "${RTSP_STREAM_YOFFSETS[$i]}" \
+			-s "$RES" \
+			/dev/fb0 </dev/null </dev/null;
+		
+		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT \
+  		# 	-err_detect ignore_err -fflags nobuffer -flags low_delay \
+  		# 	-rtsp_transport tcp -i "$STREAM_URL" \
+  		# 	-vf "setpts=PTS-STARTPTS,scale=${CAPTURE_RESOLUTION//x/:},format=rgb565le" \
+  		# 	-pix_fmt rgb565le -preset ultrafast -tune zerolatency \
+  		# 	-an -y -f fbdev \
+  		# 	-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
+  		# 	/dev/fb0 </dev/null;
 
 		# -loglevel fatal
 		# -c:v libx264 -ticks_per_frame 2 -filter_complex "mpdecimate, setpts=N/$STREAM_FPS/TB, fps=fps=$STREAM_FPS, scale=$CAPTURE_RESOLUTION" -lowres 0 -skip_loop_filter 1 -skip_frame nokey -strict unofficial -bug autodetect -ec favor_inter -idct simpleauto -pix_fmt rgb565le -update 1
