@@ -7,12 +7,14 @@ STREAM_TITLE="$2"
 XOFFSET="$3"
 YOFFSET="$4"
 STREAM_FPS="$5"
+STREAM_RESOLUTION="$6"
 echo "parameter 1 should be STREAM_URL and it is $STREAM_URL"
 echo "parameter 2 should be STREAM_TITLE and it is $STREAM_TITLE"
 echo "parameter 3 should be XOFFSET and it is $XOFFSET"
 echo "parameter 4 should be YOFFSET and it is $YOFFSET"
 echo "parameter 5 should be STREAM_FPS and it is $STREAM_FPS"
-echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $CAPTURE_RESOLUTION $STREAM_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT..."
+echo "parameter 6 should be STREAM_RESOLUTION and it is $STREAM_RESOLUTION"
+echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $STREAM_RESOLUTION $STREAM_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT..."
 
 while true; do 
 	if [ "$CAMGRID_METHOD" == "desktop_xfce" ]; then
@@ -26,8 +28,8 @@ while true; do
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -fflags nobuffer -flags low_delay -rtsp_transport tcp -i "$STREAM_URL" -vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
 
 		#Below is for larger grids:
-		RES="${CAPTURE_RESOLUTIONS[$i]}"          # grab per-camera resolution
-		case "$RES" in
+		
+		case "$STREAM_RESOLUTION" in
 			640x480)  SCALE="640:480" ;;
 			426x320)  SCALE="426:320" ;;
 			320x240)  SCALE="320:240" ;;
@@ -46,7 +48,7 @@ while true; do
 			-pix_fmt rgb565le -preset ultrafast -tune zerolatency \
 			-an -y -f fbdev \
 			-xoffset "$XOFFSET" -yoffset "$YOFFSET" \
-			-s "$RES" \
+			-s "$STREAM_RESOLUTION" \
 			/dev/fb0 </dev/null </dev/null;
 		
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT \
