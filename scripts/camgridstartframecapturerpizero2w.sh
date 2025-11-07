@@ -45,7 +45,7 @@ while true; do
 			-vf "setpts=PTS-STARTPTS,scale=$SCALE,format=rgb565le" \
 			-pix_fmt rgb565le -preset ultrafast -tune zerolatency \
 			-an -y -f fbdev \
-			-xoffset "${RTSP_STREAM_XOFFSETS[$i]}" -yoffset "${RTSP_STREAM_YOFFSETS[$i]}" \
+			-xoffset "$XOFFSET" -yoffset "$YOFFSET" \
 			-s "$RES" \
 			/dev/fb0 </dev/null </dev/null;
 		
