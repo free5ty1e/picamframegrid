@@ -7,12 +7,14 @@ STREAM_TITLE="$2"
 XOFFSET="$3"
 YOFFSET="$4"
 STREAM_FPS="$5"
+STREAM_RESOLUTION="$6"
 echo "parameter 1 should be STREAM_URL and it is $STREAM_URL"
 echo "parameter 2 should be STREAM_TITLE and it is $STREAM_TITLE"
 echo "parameter 3 should be XOFFSET and it is $XOFFSET"
 echo "parameter 4 should be YOFFSET and it is $YOFFSET"
 echo "parameter 5 should be STREAM_FPS and it is $STREAM_FPS"
-echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $CAPTURE_RESOLUTION $STREAM_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT..."
+echo "parameter 6 should be STREAM_RESOLUTION and it is $STREAM_RESOLUTION"
+echo "======----->>>Starting RTSP stream (# $i named $STREAM_TITLE) capture of URL $STREAM_URL at $STREAM_RESOLUTION $STREAM_FPS FPS to $CAPTURE_LOCATION/$STREAM_TITLE.$CAPTURE_FORMAT..."
 
 while true; do 
 	if [ "$CAMGRID_METHOD" == "desktop_xfce" ]; then
@@ -21,7 +23,43 @@ while true; do
 		# nice -10 ffmpeg -loglevel fatal -threads 1 -stimeout $RTSP_TIMEOUT -lowres 0 -skip_loop_filter 1 -skip_frame nokey -ticks_per_frame 2 -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -strict unofficial -bug autodetect -i "$STREAM_URL" -an -y -filter_complex "mpdecimate, setpts=N/$STREAM_FPS/TB, fps=fps=$STREAM_FPS, scale=$CAPTURE_RESOLUTION" -pix_fmt bgra -update 1 -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET /dev/fb0 </dev/null;
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -lowres 0 -skip_loop_filter 1 -skip_frame nokey -flags2 fast -ec favor_inter -idct simpleauto -err_detect ignore_err -strict unofficial -bug autodetect -i "$STREAM_URL" -an -y -filter_complex "mpdecimate, setpts=N/$STREAM_FPS/TB, fps=fps=$STREAM_FPS, scale=$CAPTURE_RESOLUTION" -pix_fmt rgb565le -update 1 -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -c copy /dev/fb0 </dev/null;
 		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -i "$STREAM_URL" -pix_fmt rgb565le -preset ultrafast -c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
-		nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -fflags nobuffer -flags low_delay -rtsp_transport tcp -i "$STREAM_URL" -vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
+		
+		#Below leaves the stream in the original resolution for a 2x2 grid.
+		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT -err_detect ignore_err -fflags nobuffer -flags low_delay -rtsp_transport tcp -i "$STREAM_URL" -vf 'setpts=PTS-STARTPTS' -pix_fmt rgb565le -preset ultrafast -c:a copy -an -y -f fbdev -xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION /dev/fb0 </dev/null;
+
+		#Below is for larger grids:
+		
+		case "$STREAM_RESOLUTION" in
+			640x480)  SCALE="640:480" ;;
+			426x320)  SCALE="426:320" ;;
+			320x240)  SCALE="320:240" ;;
+			320x200)  SCALE="320:200" ;;
+			213x140)  SCALE="213:140" ;;
+			212x160)  SCALE="212:160" ;;
+			160x120)  SCALE="160:120" ;;
+			150x112)  SCALE="150:112" ;;
+			107x80)   SCALE="107:80" ;;
+			*)        SCALE="160:120" ;;
+		esac
+		nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT \
+			-err_detect ignore_err -fflags nobuffer -flags low_delay \
+			-rtsp_transport tcp -i "$STREAM_URL" \
+			-vf "setpts=PTS-STARTPTS,scale=$SCALE,format=rgb565le" \
+			-pix_fmt rgb565le -preset ultrafast -tune zerolatency \
+			-an -y -f fbdev \
+			-xoffset "$XOFFSET" -yoffset "$YOFFSET" \
+			-s "$STREAM_RESOLUTION" \
+			/dev/fb0 </dev/null </dev/null;
+		
+		# nice -10 ffmpeg -threads 1 -timeout $RTSP_TIMEOUT \
+  		# 	-err_detect ignore_err -fflags nobuffer -flags low_delay \
+  		# 	-rtsp_transport tcp -i "$STREAM_URL" \
+  		# 	-vf "setpts=PTS-STARTPTS,scale=${CAPTURE_RESOLUTION//x/:},format=rgb565le" \
+  		# 	-pix_fmt rgb565le -preset ultrafast -tune zerolatency \
+  		# 	-an -y -f fbdev \
+  		# 	-xoffset $XOFFSET -yoffset $YOFFSET -s $CAPTURE_RESOLUTION \
+  		# 	/dev/fb0 </dev/null;
+
 		# -loglevel fatal
 		# -c:v libx264 -ticks_per_frame 2 -filter_complex "mpdecimate, setpts=N/$STREAM_FPS/TB, fps=fps=$STREAM_FPS, scale=$CAPTURE_RESOLUTION" -lowres 0 -skip_loop_filter 1 -skip_frame nokey -strict unofficial -bug autodetect -ec favor_inter -idct simpleauto -pix_fmt rgb565le -update 1
 		# -c copy -flags2 fast
