@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Opencode: Resume Last Session",
+      "type": "shell",
+      "command": "bash ${workspaceFolder}/.devcontainer/launch_opencode.sh",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "group": "opencode"
+    },
+    {
+      "label": "Opencode: Launch Fresh",
+      "type": "shell",
+      "command": "opencode /workspace",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "group": "opencode"
+    }
+  ]
+}
